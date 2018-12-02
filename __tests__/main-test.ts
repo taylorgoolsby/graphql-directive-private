@@ -63,5 +63,7 @@ test('private object', async () => {
 
   The problem is that the firstSchema has customFlag,
   but the second and third schema don't.
+
+  The expected result is that the secondSchema should have the customFlag.
   */
 })

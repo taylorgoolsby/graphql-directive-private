@@ -24,6 +24,8 @@ The visitors above will add a property called `customFlag` to any object or fiel
 
 The schema object returned from `makeExecutableSchema` will have this `customFlag` property. However, when calling `transformSchema(schema, transforms)`, the transforms will recieve a schema object which does not have the `customFlag` property.
 
+Please see [main-test.ts](./__tests__/main-test.ts). It demonstrates the wrong output and what the expect output is.
+
 My current work around is to pass the schema with the custom properties directly to the transforms like so: `transformSchema(originalSchema, [myTransform(originalSchema)])`.
 
 Here is an exception: if a visitor sets `isDeprecated` on a field definition, it will not be lost during the call to `transformSchema`.
