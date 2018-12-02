@@ -7,77 +7,6 @@ import {
   privateDirectiveDeclaration,
 } from '../src'
 
-test('control', async () => {
-  const typeDefs = `
-    ${privateDirectiveDeclaration}
-
-    type User {
-      userId: Int
-      post: Post
-    }
-
-    type Post {
-      postId: Int
-      user: User
-    }
-
-    type Query {
-      user: User
-      post: Post
-    }
-  `
-
-  let schema = makeExecutableSchema({
-    typeDefs,
-    schemaDirectives: {
-      private: PrivateDirective,
-    },
-    resolvers: {
-      Query: {
-        user: () => ({}),
-        post: () => ({}),
-      },
-      User: {
-        userId: () => 1,
-        post: () => ({}),
-      },
-      Post: {
-        postId: () => 1,
-        user: () => ({}),
-      },
-    },
-  })
-  schema = transformSchema(schema, [privateTransform(schema)])
-
-  const errors = validateSchema(schema)
-  expect(errors.length).toBe(0)
-
-  const query = gql`
-    query {
-      user {
-        userId
-        post {
-          postId
-        }
-      }
-      post {
-        postId
-        user {
-          userId
-        }
-      }
-    }
-  `
-  const result: any = await execute(schema, query)
-  expect(result).toEqual({
-    data: {
-      post: { postId: 1, user: { userId: 1 } },
-      user: { post: { postId: 1 }, userId: 1 },
-    },
-  })
-  // console.log('intro', JSON.stringify(result))
-})
-
 test('private object', async () => {
   const typeDefs = `
     ${privateDirectiveDeclaration}
@@ -98,188 +27,41 @@ test('private object', async () => {
     }
   `
 
-  let schema = makeExecutableSchema({
+  const firstSchema: any = makeExecutableSchema({
     typeDefs,
     schemaDirectives: {
       private: PrivateDirective,
     },
-    resolvers: {
-      Query: {
-        user: () => ({}),
-        post: () => ({}),
-      },
-      User: {
-        userId: () => 1,
-        post: () => ({}),
-      },
-      Post: {
-        postId: () => 1,
-        user: () => ({}),
-      },
-    },
   })
-  schema = transformSchema(schema, [privateTransform(schema)])
 
-  const errors = validateSchema(schema)
-  expect(errors.length).toBe(0)
-
-  // const intro = introspectionFromSchema(schema)
-  // console.log(JSON.stringify(intro))
-
-  const query = gql`
-    query {
-      user {
-        userId
-        post {
-          postId
-        }
-      }
-      post {
-        postId
-        user {
-          userId
-        }
-      }
-    }
-  `
-  const result: any = await execute(schema, query)
-  expect(result).toEqual({ data: { post: { postId: 1 } } })
-  // console.log('intro', JSON.stringify(result))
-})
-
-test('private field', async () => {
-  const typeDefs = `
-    ${privateDirectiveDeclaration}
-
-    type User {
-      userId: Int @private
-      post: Post
-    }
-
-    type Post {
-      postId: Int
-      user: User
-    }
-
-    type Query {
-      user: User
-      post: Post
-    }
-  `
-
-  let schema = makeExecutableSchema({
-    typeDefs,
-    schemaDirectives: {
-      private: PrivateDirective,
-    },
-    resolvers: {
-      Query: {
-        user: () => ({}),
-        post: () => ({}),
-      },
-      User: {
-        userId: () => 1,
-        post: () => ({}),
-      },
-      Post: {
-        postId: () => 1,
-        user: () => ({}),
+  // schema = transformSchema(schema, [privateTransform(schema)])
+  console.log('first schema', firstSchema._typeMap.User.customFlag) // true
+  // console.log('first schema, field.customFlag', firstSchema._typeMap.User._fields.userId.customFlag)
+  // console.log('first schema, field.isDeprecated', firstSchema._typeMap.User._fields.userId.isDeprecated)
+  const thirdSchema: any = transformSchema(firstSchema, [
+    {
+      transformSchema: (secondSchema: any) => {
+        console.log('second schema', secondSchema._typeMap.User.customFlag) // undefined
+        // console.log('second schema, field.customFlag', secondSchema._typeMap.User._fields.userId.customFlag)
+        // console.log('second schema, field.isDeprecated', secondSchema._typeMap.User._fields.userId.isDeprecated)
+        return secondSchema
       },
     },
-  })
-  schema = transformSchema(schema, [privateTransform(schema)])
+  ])
+  console.log('third schema', thirdSchema._typeMap.User.customFlag) // undefined
 
-  const errors = validateSchema(schema)
-  expect(errors.length).toBe(0)
+  // output of console.log:
+  /*
+  console.log __tests__/main-test.ts:45
+    first schema true
 
-  const query = gql`
-    query {
-      user {
-        userId
-        post {
-          postId
-        }
-      }
-      post {
-        postId
-        user {
-          userId
-        }
-      }
-    }
-  `
-  const result: any = await execute(schema, query)
-  expect(result).toEqual({
-    data: {
-      post: { postId: 1, user: null },
-      user: { post: { postId: 1 }, userId: null },
-    },
-  })
-  // console.log('intro', JSON.stringify(result))
-})
+  console.log __tests__/main-test.ts:48
+    second schema undefined
 
-test('mixed', async () => {
-  const typeDefs = `
-    ${privateDirectiveDeclaration}
+  console.log __tests__/main-test.ts:52
+    third schema undefined
 
-    type User @private {
-      userId: Int
-      post: Post
-    }
-
-    type Post {
-      postId: Int @private
-      user: User
-    }
-
-    type Query {
-      user: User
-      post: Post
-    }
-  `
-
-  let schema = makeExecutableSchema({
-    typeDefs,
-    schemaDirectives: {
-      private: PrivateDirective,
-    },
-    resolvers: {
-      Query: {
-        user: () => ({}),
-        post: () => ({}),
-      },
-      User: {
-        userId: () => 1,
-        post: () => ({}),
-      },
-      Post: {
-        postId: () => 1,
-        user: () => ({}),
-      },
-    },
-  })
-  schema = transformSchema(schema, [privateTransform(schema)])
-
-  const errors = validateSchema(schema)
-  expect(errors.length).toBe(0)
-
-  const query = gql`
-    query {
-      user {
-        userId
-        post {
-          postId
-        }
-      }
-      post {
-        postId
-        user {
-          userId
-        }
-      }
-    }
-  `
-  const result: any = await execute(schema, query)
-  expect(result).toEqual({ data: { post: { postId: null } } })
-  // console.log('intro', JSON.stringify(result))
+  The problem is that the firstSchema has customFlag,
+  but the second and third schema don't.
+  */
 })

@@ -15,12 +15,14 @@ export class PrivateDirective extends SchemaDirectiveVisitor {
   }
 
   public visitObject(object: any) {
-    if (!object[namespace]) object[namespace] = {}
-    object[namespace].isPrivate = true
+    object.customFlag = true
+    object.isDeprecated = true
+    object.deprecationReason = 'just because'
   }
 
   public visitFieldDefinition(field: any) {
-    if (!field[namespace]) field[namespace] = {}
-    field[namespace].isPrivate = true
+    field.customFlag = true
+    field.isDeprecated = true
+    field.deprecationReason = 'just because'
   }
 }
