@@ -12,5 +12,8 @@
     "no-console": false,
     "curly": false,
     "no-var-requires": false
-  }
+  },
+  "exclude": [
+    "node_modules/**"
+  ]
 }
