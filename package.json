@@ -1,6 +1,6 @@
 {
   "name": "graphql-directive-private",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Fields and Objects marked with @private will not be removed from the schema. They will not appear in introspection and they will not be queryable.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -56,8 +56,6 @@
     "hide",
     "remove"
   ],
-  "dependencies": {
-  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
