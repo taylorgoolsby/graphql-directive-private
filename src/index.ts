@@ -3,7 +3,7 @@ import { GraphQLSchema } from 'graphql'
 
 export default function privateDirective(directiveName: string) {
   return {
-    privateDirectiveTypeDefs: `directive @private on OBJECT | FIELD_DEFINITION`,
+    privateDirectiveTypeDefs: `directive @${directiveName} on OBJECT | FIELD_DEFINITION`,
     privateDirectiveTransform: (schema: GraphQLSchema) =>
       mapSchema(schema, {
         [MapperKind.TYPE]: (type) => {
