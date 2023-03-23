@@ -6,7 +6,7 @@ export default function privateDirective(directiveName: string) {
     privateDirectiveTypeDefs: `directive @${directiveName} on OBJECT | FIELD_DEFINITION`,
     privateDirectiveTransform: (schema: GraphQLSchema) =>
       mapSchema(schema, {
-        [MapperKind.TYPE]: (type) => {
+        [MapperKind.OBJECT_TYPE]: (type) => {
           const typeDirectives = getDirectives(schema, type)
           if (typeDirectives.private) {
             return null
