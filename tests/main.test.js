@@ -1,12 +1,14 @@
-import { makeExecutableSchema, printSchemaWithDirectives } from 'graphql-tools'
-import privateDirective from '../src'
+import test from 'boxtape'
+import {makeExecutableSchema} from '@graphql-tools/schema'
+import { printSchemaWithDirectives } from '@graphql-tools/utils'
+import privateDirective from '../lib/index.js'
 
 const {
   privateDirectiveTypeDefs,
   privateDirectiveTransform,
 } = privateDirective('private')
 
-test('control', async () => {
+test('control', async (t) => {
   const typeDefs = `
     type User {
       userId: Int
@@ -26,23 +28,28 @@ test('control', async () => {
   const expected = `schema {
   query: Query
 }
+
+directive @private on OBJECT | FIELD_DEFINITION
+
 type User {
   userId: Int
   post: Post
 }
+
 type Post {
   postId: Int
   user: User
 }
+
 type Query {
   user: User
   post: Post
 }
-directive @private on OBJECT | FIELD_DEFINITION`
-  runTest(typeDefs, expected)
+`
+  runTest(t, typeDefs, expected)
 })
 
-test('private object', async () => {
+test('private object', async (t) => {
   const typeDefs = `
     type User @private {
       userId: Int
@@ -60,17 +67,21 @@ test('private object', async () => {
   const expected = `schema {
   query: Query
 }
+
+directive @private on OBJECT | FIELD_DEFINITION
+
 type Post {
   postId: Int
 }
+
 type Query {
   post: Post
 }
-directive @private on OBJECT | FIELD_DEFINITION`
-  runTest(typeDefs, expected)
+`
+  runTest(t, typeDefs, expected)
 })
 
-test('private field', async () => {
+test('private field', async (t) => {
   const typeDefs = `
     type User {
       userId: Int @private
@@ -90,22 +101,27 @@ test('private field', async () => {
   const expected = `schema {
   query: Query
 }
+
+directive @private on OBJECT | FIELD_DEFINITION
+
 type User {
   post: Post
 }
+
 type Post {
   postId: Int
   user: User
 }
+
 type Query {
   user: User
   post: Post
 }
-directive @private on OBJECT | FIELD_DEFINITION`
-  runTest(typeDefs, expected)
+`
+  runTest(t, typeDefs, expected)
 })
 
-function runTest(typeDefs: string, expected: string) {
+function runTest(t, typeDefs, expected) {
   let schema = makeExecutableSchema({
     typeDefs: [privateDirectiveTypeDefs, typeDefs],
   })
@@ -116,5 +132,5 @@ function runTest(typeDefs: string, expected: string) {
     console.log(answer)
   }
 
-  expect(answer).toEqual(expected)
+  t.equal(answer, expected)
 }
