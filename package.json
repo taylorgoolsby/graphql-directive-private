@@ -28,12 +28,10 @@
     "graphql": "^0.11 || ^16.7.1"
   },
   "devDependencies": {
-    "@graphql-tools/schema": "^10.0.0",
     "@types/fs-extra": "^5.1.0",
-    "@types/graphql": "^14.5.0",
     "@types/isomorphic-form-data": "^2.0.1",
     "@types/lodash.get": "^4.4.6",
-    "@types/node": "^14.14.16",
+    "@types/node": "^20.3.3",
     "@types/tape": "^5.6.0",
     "@types/ws": "^7.4.0",
     "boxtape": "^0.0.12",
