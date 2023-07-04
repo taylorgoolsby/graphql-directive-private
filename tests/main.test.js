@@ -82,9 +82,10 @@ type Query {
 })
 
 test('private field', async (t) => {
-  const typeDefs = `
+  const typeDefs = `directive @sql on OBJECT | FIELD_DEFINITION
+  
     type User {
-      userId: Int @private
+      userId: Int @sql @private
       post: Post
     }
 
@@ -103,6 +104,8 @@ test('private field', async (t) => {
 }
 
 directive @private on OBJECT | FIELD_DEFINITION
+
+directive @sql on OBJECT | FIELD_DEFINITION
 
 type User {
   post: Post

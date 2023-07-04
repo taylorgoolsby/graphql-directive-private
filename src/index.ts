@@ -7,16 +7,20 @@ export default function privateDirective(directiveName: string = 'private') {
     privateDirectiveTransform: (schema: GraphQLSchema) =>
       mapSchema(schema, {
         [MapperKind.TYPE]: (type) => {
-          const typeDirective: any = getDirectives(schema, type)?.[0]
-          if (typeDirective?.name === directiveName) {
+          const directives = getDirectives(schema, type)
+          const directive = directives?.find((d) => d.name === directiveName)
+
+          if (directive) {
             return null
           } else {
             return type
           }
         },
         [MapperKind.OBJECT_FIELD]: (fieldConfig, fieldName, typeName) => {
-          const fieldDirective: any = getDirectives(schema, fieldConfig)?.[0]
-          if (fieldDirective?.name === directiveName) {
+          const directives = getDirectives(schema, fieldConfig)
+          const directive = directives?.find((d) => d.name === directiveName)
+
+          if (directive) {
             return null
           } else {
             return fieldConfig
