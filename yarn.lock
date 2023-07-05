@@ -240,10 +240,10 @@ base@^0.11.1:
     mixin-deep "^1.2.0"
     pascalcase "^0.1.1"
 
-boxtape@^0.0.12:
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/boxtape/-/boxtape-0.0.12.tgz#160d94cdaece25e0a38cf9e0c1debd9f6d3bc6d7"
-  integrity sha512-5nz3rgr7msap01Sxz65e4YpkK2sCkaGvc2zgwODn7ABk07LZFdEWtI/zONGIxEh5N/NSncAea6agwoISk4CZAQ==
+boxtape@^0.0.13:
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/boxtape/-/boxtape-0.0.13.tgz#26c727aa1090b469b338a76f4584e430e7d52762"
+  integrity sha512-VZPXZ8YgJme5eJ7TVCT0dSXRLVlNCWTfSIL8e9CsXYc14O9Lcstihobf3+5vkmJz5vu7btrtcou/djD0XYPk0w==
   dependencies:
     tap-pretty-with-errors "^0.0.7"
     tape "^5.6.4"

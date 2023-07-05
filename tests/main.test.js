@@ -44,8 +44,7 @@ type Post {
 type Query {
   user: User
   post: Post
-}
-`
+}`
   runTest(t, typeDefs, expected)
 })
 
@@ -76,8 +75,7 @@ type Post {
 
 type Query {
   post: Post
-}
-`
+}`
   runTest(t, typeDefs, expected)
 })
 
@@ -119,8 +117,7 @@ type Post {
 type Query {
   user: User
   post: Post
-}
-`
+}`
   runTest(t, typeDefs, expected)
 })
 
