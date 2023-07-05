@@ -4,36 +4,37 @@ Fields and Objects marked with @private will be removed from the schema. They wi
 
 ## Example
 
-```
-import { PrivateDirective, privateTransform, privateDirectiveDeclaration } from 'graphql-directive-private'
+```js
+import privateDirective from 'graphql-directive-private'
+
+const { privateDirectiveTransform } = privateDirective('private')
+
 const typeDefs = `
-    ${privateDirectiveDeclaration}
+  directive @private on OBJECT | FIELD_DEFINITION
 
-    type User @private {
-      userId: Int
-      post: Post
-    }
+  type User @private {
+    userId: Int
+    post: Post
+  }
 
-    type Post {
-      postId: Int @private
-      user: User
-    }
+  type Post {
+    postId: Int @private
+    user: User
+  }
 
-    type Query {
-      user: User
-      post: Post
-    }
+  type Query {
+    user: User
+    post: Post
+  }
   `
 
-const publicSchema = makeExecutableSchema({
-  typeDefs,
-  schemaDirectives: {
-    private: PrivateDirective
-  },
+let schema = makeExecutableSchema({
+  typeDefs
 })
-const privateSchema = transformSchema(publicSchema, [privateTransform(publicSchema)])
 
-const query = gql`
+schema = privateDirectiveTransform(schema)
+
+const query = `
   query {
     user {
       userId
